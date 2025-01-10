@@ -1,9 +1,11 @@
-﻿using ExifLib;
+﻿using System.IO.Enumeration;
+using MetadataExtractor;
+using Directory = MetadataExtractor.Directory;
 
 // See https://aka.ms/new-console-template for more information
 const string SnsHdrProFilePath = @"c:\program files\sns-hdr pro 2\sns-hdr pro.exe";
 const string SnsHdrProDefaultArgs = "-q -default -jpeg -srgb ";
-const float MinHdrTimeSpan = 0.5f;
+const string RelativeHdrSourceFolderPath = "HDR source";
 
 // Executable name determines it's function
 switch (Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs().First()))
@@ -16,55 +18,53 @@ switch (Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs().First(
         break;
     default : return;
 }
+return;
 
 void MoveHDR()
 {
-    TimeSpan minSpan = TimeSpan.FromSeconds(MinHdrTimeSpan);
-    DateTime prevTime = default(DateTime);
-    int consecutive = 0;
-
     List<string> args = Environment.GetCommandLineArgs().ToList();
-    // First arg is executable path
+    // Remove first arg, the executable path
     args.RemoveAt(0);
     
-    using StreamWriter logFile = new StreamWriter(Path.Combine("c:\\Temp", "MoveHDR.log"));
-    foreach (string arg in args)
+    // using StreamWriter logFile = new StreamWriter(Path.Combine("c:\\AcdseeHelper", "MoveHDR.log"));
+    foreach (string pictureFullPath in args)
     {
-        FileInfo fileInfo = new FileInfo(arg);
-        using ExifReader exifReader = new ExifReader(fileInfo.FullName);
-        // exifReader.GetTagValue(ExifTags.DateTimeDigitized, out DateTime pictureTime);
-        exifReader.GetTagValue(ExifTags.DateTimeOriginal, out DateTime pictureTime);
-        // exifReader.GetTagValue(ExifTags.SubsecTime, out DateTime pictureTime);
-        
-        // // According to https://exiv2.org/tags-panasonic.html this should yield Exif.Panasonic.BracketSettings, but no
-        // exifReader.GetTagValue(69, out int bracketSettings);
-        // exifReader.GetTagValue(0x0045, out int bracketSettings);
-
-        exifReader.GetTagValue(ExifTags.MakerNote, out object makerNote);
-        
-        Console.WriteLine(fileInfo.Name);
-        logFile.WriteLine( $"{fileInfo.Name} : {pictureTime}");
-        
-        if (prevTime == default)
+        FileInfo fileInfo = new FileInfo(pictureFullPath);
+        int bracketCount = GetBracketSettings(fileInfo);
+        if (bracketCount > 0)
         {
-            prevTime = pictureTime;
-            continue;
-        }
-        TimeSpan delta = pictureTime - prevTime;
-        if (delta < minSpan)
-        {
-            // Consecutive file
-            consecutive++;
-            prevTime = pictureTime;
-        }
-        else
-        {
-            Console.WriteLine();
-            logFile.WriteLine(consecutive.ToString());
-            consecutive = 0;
-            prevTime = default;
+            // The output files of HDR processing still have the 'Bracket Settings' tag, avoid moving these
+            if (FileSystemName.MatchesSimpleExpression("*HDR(*).*", pictureFullPath)) continue;
+            
+            // Determine the bracket count and construct corresponding destination path, then move file
+            DirectoryInfo pictureFolder = fileInfo.Directory;
+            string fileName = fileInfo.Name;
+            string destFolder = Path.Combine(pictureFolder.ToString(), Path.Combine(RelativeHdrSourceFolderPath, bracketCount.ToString()));
+            string destFullPath = Path.Combine(destFolder, fileName);
+            if (System.IO.Directory.Exists(destFolder))
+            {
+                // logFile.WriteLine($"{pictureFullPath} -> {destFullPath}");
+                File.Move(pictureFullPath, destFullPath);
+            }
         }
     }
+}
+
+// Read 'Bracket Settings' from camera brand specific 'makernote' section in exif data
+int GetBracketSettings(FileInfo _fileInfo)
+{
+    IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(_fileInfo.FullName);
+    foreach (var directory in directories)
+    foreach (var tag in directory.Tags)
+    {
+        if (tag.Name.ToLowerInvariant() == "bracket settings")
+        {
+            int bracketCount = 0;
+            int.TryParse(tag.Description[0].ToString(), out bracketCount);
+            return bracketCount;
+        }
+    }
+    return 0;
 }
 
 void RunSnsHdrPro(int _imageCount)

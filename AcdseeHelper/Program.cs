@@ -3,14 +3,68 @@
 // See https://aka.ms/new-console-template for more information
 const string SnsHdrProFilePath = @"c:\program files\sns-hdr pro 2\sns-hdr pro.exe";
 const string SnsHdrProDefaultArgs = "-q -default -jpeg -srgb ";
+const float MinHdrTimeSpan = 0.5f;
 
 // Executable name determines it's function
 switch (Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs().First()))
 {
+    case "MoveHDR":
+        MoveHDR();
+        break;
     case "HDR5": 
         RunSnsHdrPro(5);
         break;
     default : return;
+}
+
+void MoveHDR()
+{
+    TimeSpan minSpan = TimeSpan.FromSeconds(MinHdrTimeSpan);
+    DateTime prevTime = default(DateTime);
+    int consecutive = 0;
+
+    List<string> args = Environment.GetCommandLineArgs().ToList();
+    // First arg is executable path
+    args.RemoveAt(0);
+    
+    using StreamWriter logFile = new StreamWriter(Path.Combine("c:\\Temp", "MoveHDR.log"));
+    foreach (string arg in args)
+    {
+        FileInfo fileInfo = new FileInfo(arg);
+        using ExifReader exifReader = new ExifReader(fileInfo.FullName);
+        // exifReader.GetTagValue(ExifTags.DateTimeDigitized, out DateTime pictureTime);
+        exifReader.GetTagValue(ExifTags.DateTimeOriginal, out DateTime pictureTime);
+        // exifReader.GetTagValue(ExifTags.SubsecTime, out DateTime pictureTime);
+        
+        // // According to https://exiv2.org/tags-panasonic.html this should yield Exif.Panasonic.BracketSettings, but no
+        // exifReader.GetTagValue(69, out int bracketSettings);
+        // exifReader.GetTagValue(0x0045, out int bracketSettings);
+
+        exifReader.GetTagValue(ExifTags.MakerNote, out object makerNote);
+        
+        Console.WriteLine(fileInfo.Name);
+        logFile.WriteLine( $"{fileInfo.Name} : {pictureTime}");
+        
+        if (prevTime == default)
+        {
+            prevTime = pictureTime;
+            continue;
+        }
+        TimeSpan delta = pictureTime - prevTime;
+        if (delta < minSpan)
+        {
+            // Consecutive file
+            consecutive++;
+            prevTime = pictureTime;
+        }
+        else
+        {
+            Console.WriteLine();
+            logFile.WriteLine(consecutive.ToString());
+            consecutive = 0;
+            prevTime = default;
+        }
+    }
 }
 
 void RunSnsHdrPro(int _imageCount)

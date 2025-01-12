@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcdseeHelper", "AcdseeHelper\AcdseeHelper.csproj", "{4B6CAA54-A5E6-42EC-A368-16189A452CE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveStereo", "MoveStereo\MoveStereo.csproj", "{9DE23447-69C2-49CF-B778-799B71AB96C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveHDR", "MoveHDR\MoveHDR.csproj", "{90B365B5-7577-4B31-823D-D4AEA4003C0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4B6CAA54-A5E6-42EC-A368-16189A452CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B6CAA54-A5E6-42EC-A368-16189A452CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B6CAA54-A5E6-42EC-A368-16189A452CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B6CAA54-A5E6-42EC-A368-16189A452CE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DE23447-69C2-49CF-B778-799B71AB96C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DE23447-69C2-49CF-B778-799B71AB96C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DE23447-69C2-49CF-B778-799B71AB96C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DE23447-69C2-49CF-B778-799B71AB96C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90B365B5-7577-4B31-823D-D4AEA4003C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B365B5-7577-4B31-823D-D4AEA4003C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B365B5-7577-4B31-823D-D4AEA4003C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B365B5-7577-4B31-823D-D4AEA4003C0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

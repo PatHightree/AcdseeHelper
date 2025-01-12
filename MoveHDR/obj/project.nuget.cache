@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "oqncByLWsxM=",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\AcdseeHelper\\MoveHDR\\MoveHDR.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Skikk\\.nuget\\packages\\metadataextractor\\2.9.0-rc2\\metadataextractor.2.9.0-rc2.nupkg.sha512",
+    "C:\\Users\\Skikk\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.2\\microsoft.netcore.platforms.2.1.2.nupkg.sha512",
+    "C:\\Users\\Skikk\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
+    "C:\\Users\\Skikk\\.nuget\\packages\\system.text.encoding.codepages\\4.5.1\\system.text.encoding.codepages.4.5.1.nupkg.sha512",
+    "C:\\Users\\Skikk\\.nuget\\packages\\xmpcore\\6.1.10.1\\xmpcore.6.1.10.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -16,18 +16,18 @@ This pulldown menu can also be used to invoke the editors.
 ## The Tools
 
 ### MoveHDR
-This tool reads the bracketing settings from the exif data and moves the file to the corresponding HDR source folder
+For HDR processing I use [SNS-HDR Pro](https://www.sns-hdr.com). It can do batch processing but requires batches of a specified number of exposures.
+This tool processes all selected files, reads the bracketing settings from the exif data and moves the file to the corresponding HDR source folder.
 
 ### MoveStereo
-For stereoscopic photography, I use the cha-cha method.  
-I ise StereoPhotoMaker to assemble side-by-side stereo pictures.
+For stereoscopic photography, I mainly shoot using the [cha-cha method](https://jrsdesign.net/stereo-photography/) and process with [StereoPhotoMaker](https://stereo.jpn.org/eng/stphmkr/) to create side-by-side stereo pictures.
 
-My processing work is as follows:
+The processing workflow:
 - Select the left pictures
 - Invoke the MoveStereo tool
   - This moves the left pictures to _Project/Stereo source/Left_
   - It selects all the pictures that were shot right after the left pictures, and moves them to _Project/Stereo source/Right_
-- After that it's just a matter of firing up StereoPhotoMaker and starting a multi-conversion job.
+- After that it's just a matter of firing up StereoPhotoMaker and starting a multi-conversion job with the Left and Right folders.
 
 ## Acknowledgements
 This project uses code from these repo's:
